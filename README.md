@@ -1,105 +1,80 @@
-# 🏦 BuyShare v2 – Secure Share Investment Platform
+# 🏦 BuyShare v2 - Bank Share Investment Platform
 
-**Node.js + MySQL + Glassmorphism UI | Dark/Light + ENG/KIN**
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-green)
+![License](https://img.shields.io/badge/license-MIT-orange)
 
-## 📁 Project Structure
-```
-buyshare/
-├── server.js              ← Express app + security middleware
-├── seed.js                ← Set real bcrypt passwords (run once)
-├── database.sql           ← MySQL schema + seed data
-├── package.json           ← Dependencies (run npm install)
-├── config/
-│   ├── db.js              ← MySQL pool
-│   └── security.js        ← AES-256-GCM encryption (at rest)
-├── middleware/
-│   └── auth.js            ← Session auth guards
-├── models/                ← OOP classes
-│   ├── User.js
-│   ├── Share.js
-│   ├── PurchaseRequest.js
-│   ├── Notification.js
-│   └── AuditLog.js
-├── routes/                ← REST API endpoints
-│   ├── auth.js
-│   ├── shares.js
-│   ├── requests.js
-│   ├── users.js
-│   ├── banks.js
-│   ├── notifications.js
-│   └── stats.js
-└── public/                ← Frontend SPA
-    ├── index.html
-    ├── styles.css
-    └── app.js
-```
+**BuyShare** is a digital platform that connects **investors** with **banks** for purchasing shares in a secure, reliable, and modern way.
 
-## ⚙️ Setup (Phase 2 – install & run)
+---
+
+## 📸 **DEMO**
+
+> *Place your system screenshots here* (see instructions below)
+
+| Login Page | Dashboard | Shares Management |
+|------------|-----------|-------------------|
+| ![Login](screenshots/login.png) | ![Dashboard](screenshots/image.png) | ![Shares](screenshots/sheres.png) |
+
+| Buy Shares | Notifications | Reports |
+|------------|---------------|---------|
+| ![Buy](screenshots/Buy.png) | ![Notifications](screenshots/notifrication.png) | ![Reports](screenshots/report.png) |
+
+---
+
+## ✨ **Features**
+
+### 👤 **Users**
+- **Admin:** Manage system, bank managers, reports
+- **Bank Manager:** Manage bank shares, approve/reject requests
+- **Investor:** Register, purchase shares, track requests
+
+### 🔒 **Security**
+- Passwords hashed with bcrypt (12 rounds)
+- Data at rest encrypted with AES-256-GCM
+- Rate limiting (max 30 attempts/15 min)
+- Account lockout after 5 failed attempts
+- Session security (httpOnly, sameSite)
+- SQL injection protection (parameterized queries)
+- XSS protection (helmet + CSP)
+- Audit logs for all actions
+
+### 🌐 **Internationalization**
+- 🏴󠁧󠁢󠁥󠁮󠁧󠁿 English
+- 🇷🇼 Kinyarwanda
+
+### 🎨 **UI/UX**
+- Dark/Light theme toggle
+- Glassmorphism design
+- Responsive (mobile friendly)
+- Real-time notifications
+- Toast messages
+
+---
+
+## 🚀 **Quick Start**
+
+### **Prerequisites**
+- Node.js v18+
+- MySQL v8+
+- npm or yarn
+
+### **Installation**
 
 ```bash
-# 1. Install dependencies
-cd buyshare && npm install
+# 1. Clone repository
+git clone https://github.com/Kellokent3/buyshare.git
+cd buyshare
 
-# 2. Create database
+# 2. Install dependencies
+npm install
+
+# 3. Setup database
 mysql -u root -p < database.sql
 
-# 3. Set real bcrypt passwords (IMPORTANT!)
-node seed.js
+# 4. Create .env file (copy from example)
+cp .env.example .env
+# Edit .env with your credentials
 
-# 4. Start server
-npm start
-
-or
-
-pm2 resurrect
-# → http://localhost:2500
-```
-
-### Optional: env vars
-```bash
-DB_HOST=localhost  DB_USER=root  DB_PASS=yourpass
-DB_NAME=buyshare_db  PORT=3000
-SESSION_SECRET=your-secret-here
-ENCRYPT_KEY=your-32-char-key-here!!
-```
-
-## 👤 Demo Accounts
-| Role | Email | Password |
-|------|-------|----------|
-| **Admin** | admin@buyshare.rw | admin123 |
-| **Bank Manager** | manager@bk.rw | manager123 |
-| **Investor** | investor@example.rw | investor123 |
-
-## 🔒 Security Features
-| Layer | Method |
-|-------|--------|
-| **Passwords** | bcrypt (12 rounds) |
-| **Data at rest** | AES-256-GCM encrypted `amount_enc` |
-| **In transit** | Helmet security headers, HTTPS-ready |
-| **Sessions** | httpOnly + sameSite cookies |
-| **Rate limiting** | 20 login attempts / 15 min |
-| **Account lockout** | 5 failed → locked 15 min |
-| **SQL injection** | Parameterized queries (mysql2) |
-| **CSRF** | sameSite:strict cookie |
-| **Audit log** | All actions tracked |
-| **Transactions** | DB transactions on purchase/approve |
-
-## ✨ Features
-### Admin
-- Dashboard: stats overview
-- Manage bank managers (add/edit/deactivate)
-- View all shares and requests
-- Reports
-
-### Bank Manager
-- Add/edit shares for their bank
-- Review and approve/reject purchase requests
-- Reports for their bank
-
-### Investor
-- Register & login
-- Browse available shares
-- Submit purchase requests
-- Track request status
-- Receive notifications
-"# buyshare" 
+# 5. Start server
+npm start"# buyshare" 
