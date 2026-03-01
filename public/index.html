@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuyShare – Bank Share Investment</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link href="styles.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ══ AUTH CONTAINER ══ -->
+<div id="auth-container" class="auth-wrap">
+  <div class="auth-top-ctrl">
+    <button class="ctrl-btn" id="a-lang"><i class="fas fa-globe"></i><span id="a-lang-lbl">EN</span></button>
+    <button class="ctrl-btn" id="a-theme"><i class="fas fa-moon" id="a-theme-ic"></i></button>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="login-box" class="auth-box glass">
+    <div class="auth-hd">
+      <div class="logo"><i class="fas fa-university"></i><span>BuyShare</span></div>
+      <h2 data-t="welcome_back">Welcome Back</h2>
+      <p data-t="sign_in_sub">Sign in to your account</p>
+    </div>
+    <form id="login-form">
+      <div class="fg">
+        <label data-t="email">Email</label>
+        <div class="iw"><i class="fas fa-envelope"></i>
+          <input type="email" id="l-email" data-tp="email_ph" placeholder="Email" required>
+        </div>
+      </div>
+      <div class="fg">
+        <label data-t="password">Password</label>
+        <div class="iw"><i class="fas fa-lock"></i>
+          <input type="password" id="l-pass" data-tp="password_ph" placeholder="Password" required>
+        </div>
+      </div>
+      <div class="fg">
+        <label data-t="role">Role</label>
+        <div class="iw"><i class="fas fa-user-tag"></i>
+          <select id="l-role" required>
+            <option value="" data-t="choose_role">Choose role</option>
+            <option value="admin" data-t="r_admin">Administrator</option>
+            <option value="bank_manager" data-t="r_manager">Bank Manager</option>
+            <option value="investor" data-t="r_investor">Investor</option>
+          </select>
+        </div>
+      </div>
+      <div id="l-err" class="alert alert-danger hidden"></div>
+      <button type="submit" class="btn btn-primary btn-block">
+        <i class="fas fa-sign-in-alt"></i><span data-t="sign_in">Sign In</span>
+      </button>
+    </form>
+    <p class="auth-ft"><span data-t="no_account">No account?</span>
+      <a href="#" id="go-reg" data-t="register_now"> Register</a></p>
+    <div class="demo-box glass">
+      <p class="demo-title"><i class="fas fa-info-circle"></i> <span data-t="demo_creds">Demo Credentials</span></p>
+      <div class="cred" data-r="admin"        data-e="admin@buyshare.rw"   data-p="admin123">
+        <span class="badge bg-red" data-t="r_admin">Admin</span> admin@buyshare.rw / admin123</div>
+      <div class="cred" data-r="bank_manager" data-e="manager@bk.rw"       data-p="manager123">
+        <span class="badge bg-org" data-t="r_manager">Manager</span> manager@bk.rw / manager123</div>
+      <div class="cred" data-r="investor"     data-e="investor@example.rw" data-p="investor123">
+        <span class="badge bg-grn" data-t="r_investor">Investor</span> investor@example.rw / investor123</div>
+    </div>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="reg-box" class="auth-box glass hidden">
+    <div class="auth-hd">
+      <div class="logo"><i class="fas fa-university"></i><span>BuyShare</span></div>
+      <h2 data-t="create_account">Create Account</h2>
+      <p data-t="reg_sub">Join as an investor</p>
+    </div>
+    <form id="reg-form">
+      <div class="fg"><label data-t="full_name">Full Name</label>
+        <div class="iw"><i class="fas fa-user"></i>
+          <input type="text" id="r-name" data-tp="name_ph" placeholder="Full name" required></div></div>
+      <div class="fg"><label data-t="email">Email</label>
+        <div class="iw"><i class="fas fa-envelope"></i>
+          <input type="email" id="r-email" data-tp="email_ph" placeholder="Email" required></div></div>
+      <div class="fg"><label data-t="phone">Phone</label>
+        <div class="iw"><i class="fas fa-phone"></i>
+          <input type="tel" id="r-phone" placeholder="+250 7XX XXX XXX"></div></div>
+      <div class="fg"><label data-t="password">Password</label>
+        <div class="iw"><i class="fas fa-lock"></i>
+          <input type="password" id="r-pass" data-tp="password_ph" placeholder="Min 6 chars" required minlength="6"></div></div>
+      <div id="r-err" class="alert alert-danger hidden"></div>
+      <div id="r-ok" class="alert alert-success hidden"></div>
+      <button type="submit" class="btn btn-primary btn-block">
+        <i class="fas fa-user-plus"></i><span data-t="register">Register</span></button>
+    </form>
+    <p class="auth-ft"><a href="#" id="go-login" data-t="back_login">← Back to Sign In</a></p>
+  </div>
+</div>
+
+<!-- ══ APP LAYOUT ══ -->
+<div id="app" class="app hidden">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar glass">
+    <div class="sb-hd">
+      <div class="logo"><i class="fas fa-university"></i><span>BuyShare</span></div>
+    </div>
+    <nav id="sb-nav" class="sb-nav"></nav>
+    <div class="sb-ft">
+      <div class="user-card glass" id="user-card">
+        <div class="u-av" id="u-av">U</div>
+        <div class="u-inf">
+          <span id="u-name">User</span>
+          <small id="u-role">Role</small>
+        </div>
+      </div>
+      <button class="btn-ico btn-logout" id="logout-btn" title="Logout">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </aside>
+  <div id="sb-overlay" class="sb-overlay"></div>
+
+  <!-- Main -->
+  <main id="main" class="main">
+    <header class="topbar glass">
+      <div class="tb-l">
+        <button class="btn-ico" id="menu-btn"><i class="fas fa-bars"></i></button>
+        <h1 id="page-ttl" class="pg-ttl">Dashboard</h1>
+      </div>
+      <div class="tb-r">
+        <button class="ctrl-btn" id="lang-btn"><i class="fas fa-globe"></i><span id="lang-lbl">EN</span></button>
+        <button class="ctrl-btn" id="theme-btn"><i class="fas fa-moon" id="theme-ic"></i></button>
+        <button class="ctrl-btn notif-btn" id="notif-btn">
+          <i class="fas fa-bell"></i>
+          <span id="notif-cnt" class="badge-dot hidden">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Notification panel -->
+    <div id="notif-panel" class="notif-panel glass hidden">
+      <div class="np-hd">
+  <strong data-t="notifications">Notifications</strong>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-text" id="mark-read" data-t="mark_all_read">Mark all read</button>
+    <button class="btn-text" id="delete-read" style="color:var(--err)">🗑️ Delete read</button>
+  </div>
+</div>
+      <div id="notif-list" class="np-list"></div>
+    </div>
+
+    <div class="pages" id="pages">
+
+      <!-- DASHBOARD -->
+      <section id="pg-dashboard" class="page active">
+        <div id="stats-grid" class="stats-grid"></div>
+        <h3 data-t="recent_activity" style="margin-bottom:12px">Recent Activity</h3>
+        <div id="recent-wrap" class="tbl-wrap glass"></div>
+      </section>
+
+      <!-- SHARES -->
+      <section id="pg-shares" class="page">
+        <div class="pg-hd">
+          <h2 data-t="available_shares">Shares</h2>
+          <button class="btn btn-primary hidden" id="add-share-btn">
+            <i class="fas fa-plus"></i><span data-t="add_share">Add Share</span></button>
+        </div>
+        <div id="shares-grid" class="shares-grid"></div>
+      </section>
+
+      <!-- MY REQUESTS -->
+      <section id="pg-my-requests" class="page">
+        <div class="pg-hd"><h2 data-t="my_requests">My Requests</h2></div>
+        <div class="tbl-wrap glass">
+          <table class="tbl">
+            <thead><tr>
+              <th data-t="share">Share</th><th data-t="bank">Bank</th>
+              <th data-t="qty">Qty</th><th data-t="total">Total</th>
+              <th data-t="status">Status</th><th data-t="date">Date</th>
+            </tr></thead>
+            <tbody id="my-req-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- MANAGE REQUESTS -->
+      <section id="pg-manage-requests" class="page">
+        <div class="pg-hd">
+          <h2 data-t="manage_requests">Manage Requests</h2>
+          <select id="req-filter" class="filter-sel">
+            <option value="" data-t="all">All</option>
+            <option value="pending" data-t="pending">Pending</option>
+            <option value="approved" data-t="approved">Approved</option>
+            <option value="rejected" data-t="rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="tbl-wrap glass">
+          <table class="tbl">
+            <thead><tr>
+              <th data-t="investor">Investor</th><th data-t="share">Share</th>
+              <th data-t="qty">Qty</th><th data-t="total">Total</th>
+              <th data-t="status">Status</th><th data-t="date">Date</th>
+              <th data-t="actions">Actions</th>
+            </tr></thead>
+            <tbody id="mng-req-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- USERS (admin) -->
+      <section id="pg-users" class="page">
+        <div class="pg-hd">
+          <h2 data-t="manage_users">Users</h2>
+          <button class="btn btn-primary" id="add-user-btn">
+            <i class="fas fa-user-plus"></i><span data-t="add_manager">Add Manager</span></button>
+        </div>
+        <div class="tbl-wrap glass">
+          <table class="tbl">
+            <thead><tr>
+              <th data-t="name">Name</th><th data-t="email">Email</th>
+              <th data-t="role">Role</th><th data-t="bank">Bank</th>
+              <th data-t="status">Status</th><th data-t="actions">Actions</th>
+            </tr></thead>
+            <tbody id="users-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- REPORTS -->
+      <section id="pg-reports" class="page">
+        <div class="pg-hd"><h2 data-t="reports">Reports</h2></div>
+        <div id="reports-grid" class="reports-grid"></div>
+      </section>
+
+    </div><!-- /pages -->
+  </main>
+</div><!-- /app -->
+
+<!-- ══ MODALS ══ -->
+<!-- BUY -->
+<div class="modal-ov hidden" id="buy-ov">
+  <div class="modal glass">
+    <div class="mod-hd"><h3><i class="fas fa-shopping-cart"></i> <span data-t="buy_shares">Buy Shares</span></h3>
+      <button class="mod-close" data-m="buy-ov">×</button></div>
+    <form id="buy-form">
+      <input type="hidden" id="buy-sid">
+      <div id="buy-info" class="buy-info glass"></div>
+      <div class="fg"><label data-t="quantity">Quantity</label>
+        <div class="iw"><i class="fas fa-hashtag"></i>
+          <input type="number" id="buy-qty" min="1" placeholder="1" required></div></div>
+      <div class="sum-box glass">
+        <div class="sum-row"><span data-t="price_per_share">Price/Share</span><span id="s-price">0 RWF</span></div>
+        <div class="sum-row"><span data-t="quantity">Qty</span><span id="s-qty">0</span></div>
+        <div class="sum-row total"><span data-t="total">Total</span><span id="s-total">0 RWF</span></div>
+      </div>
+      <div id="buy-err" class="alert alert-danger hidden"></div>
+      <div class="mod-ft">
+        <button type="button" class="btn btn-secondary" data-m="buy-ov" data-t="cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i><span data-t="submit_request">Submit</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- SHARE FORM -->
+<div class="modal-ov hidden" id="share-ov">
+  <div class="modal glass">
+    <div class="mod-hd"><h3 id="share-mod-ttl"><i class="fas fa-layer-group"></i> <span data-t="add_share">Add Share</span></h3>
+      <button class="mod-close" data-m="share-ov">×</button></div>
+    <form id="share-form">
+      <input type="hidden" id="sh-id">
+      <div class="fg"><label data-t="share_name">Share Name</label>
+        <div class="iw"><i class="fas fa-tag"></i>
+          <input type="text" id="sh-name" placeholder="e.g. BK Ordinary Shares" required></div></div>
+      <div class="fg" id="sh-bank-grp"><label data-t="bank">Bank</label>
+        <div class="iw"><i class="fas fa-university"></i>
+          <select id="sh-bank"><option value="">Select bank…</option></select></div></div>
+      <div class="frow">
+        <div class="fg"><label data-t="total_shares">Total Shares</label>
+          <div class="iw"><i class="fas fa-layer-group"></i>
+            <input type="number" id="sh-total" placeholder="1000" required min="1"></div></div>
+        <div class="fg"><label data-t="available">Available</label>
+          <div class="iw"><i class="fas fa-check-circle"></i>
+            <input type="number" id="sh-avail" placeholder="1000" required min="0"></div></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label data-t="price_per_share">Price/Share</label>
+          <div class="iw"><i class="fas fa-coins"></i>
+            <input type="number" id="sh-price" placeholder="350" step="0.01" required min="0.01"></div></div>
+        <div class="fg"><label data-t="currency">Currency</label>
+          <div class="iw"><i class="fas fa-money-bill"></i>
+            <select id="sh-cur"><option>RWF</option><option>USD</option><option>EUR</option></select></div></div>
+      </div>
+      <div class="fg"><label data-t="status">Status</label>
+        <div class="iw"><i class="fas fa-toggle-on"></i>
+          <select id="sh-status"><option value="active" data-t="active">Active</option>
+            <option value="inactive" data-t="inactive">Inactive</option></select></div></div>
+      <div class="fg"><label data-t="description">Description</label>
+        <div class="iw"><i class="fas fa-align-left"></i>
+          <textarea id="sh-desc" rows="2" placeholder="Optional…"></textarea></div></div>
+      <div id="sh-err" class="alert alert-danger hidden"></div>
+      <div class="mod-ft">
+        <button type="button" class="btn btn-secondary" data-m="share-ov" data-t="cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i><span data-t="save">Save</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- USER FORM -->
+<div class="modal-ov hidden" id="user-ov">
+  <div class="modal glass">
+    <div class="mod-hd"><h3 id="user-mod-ttl"><i class="fas fa-user-plus"></i> <span data-t="add_manager">Add Manager</span></h3>
+      <button class="mod-close" data-m="user-ov">×</button></div>
+    <form id="user-form">
+      <input type="hidden" id="u-eid">
+      <div class="fg"><label data-t="full_name">Full Name</label>
+        <div class="iw"><i class="fas fa-user"></i>
+          <input type="text" id="uf-name" placeholder="Full name" required></div></div>
+      <div class="fg" id="u-email-grp"><label data-t="email">Email</label>
+        <div class="iw"><i class="fas fa-envelope"></i>
+          <input type="email" id="u-email" placeholder="Email"></div></div>
+      <div class="fg"><label data-t="phone">Phone</label>
+        <div class="iw"><i class="fas fa-phone"></i>
+          <input type="tel" id="u-phone" placeholder="+250 7XX XXX XXX"></div></div>
+      <div class="fg" id="u-pass-grp"><label data-t="password">Password</label>
+        <div class="iw"><i class="fas fa-lock"></i>
+          <input type="password" id="u-pass" placeholder="Default: manager123" minlength="6"></div></div>
+      <div class="fg"><label data-t="bank">Bank</label>
+        <div class="iw"><i class="fas fa-university"></i>
+          <select id="u-bank"><option value="">No bank</option></select></div></div>
+      <div id="u-err" class="alert alert-danger hidden"></div>
+      <div class="mod-ft">
+        <button type="button" class="btn btn-secondary" data-m="user-ov" data-t="cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i><span data-t="save">Save</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- REJECT -->
+<div class="modal-ov hidden" id="rej-ov">
+  <div class="modal glass">
+    <div class="mod-hd"><h3><i class="fas fa-times-circle"></i> <span data-t="reject_request">Reject Request</span></h3>
+      <button class="mod-close" data-m="rej-ov">×</button></div>
+    <form id="rej-form">
+      <input type="hidden" id="rej-id">
+      <div class="fg"><label data-t="rejection_reason">Reason</label>
+        <div class="iw"><i class="fas fa-comment-alt"></i>
+          <textarea id="rej-reason" rows="3" data-tp="rejection_ph" placeholder="Enter reason…" required></textarea></div></div>
+      <div class="mod-ft">
+        <button type="button" class="btn btn-secondary" data-m="rej-ov" data-t="cancel">Cancel</button>
+        <button type="submit" class="btn btn-danger"><i class="fas fa-times"></i><span data-t="reject">Reject</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="modal-ov hidden" id="conf-ov">
+  <div class="modal glass" style="max-width:400px">
+    <div class="mod-hd"><h3><i class="fas fa-exclamation-triangle"></i> <span data-t="confirm">Confirm</span></h3>
+      <button class="mod-close" data-m="conf-ov">×</button></div>
+    <p id="conf-msg" style="margin:16px 0;color:var(--txt2)" data-t="confirm_delete">Are you sure?</p>
+    <div class="mod-ft">
+      <button class="btn btn-secondary" data-m="conf-ov" data-t="cancel">Cancel</button>
+      <button class="btn btn-danger" id="conf-yes"><i class="fas fa-trash"></i><span data-t="delete">Delete</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+<script src="app.js"></script>
+</body>
+</html>
