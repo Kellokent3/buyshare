@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuyShare - Invest in Bank Shares | Rwanda's Premier Investment Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       RESET & BASE STYLES
+    ═══════════════════════════════════════════════════════════ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Light mode — 2 colors: crisp white + electric indigo */
+      --primary: #4f46e5;
+      --primary-deep: #3730a3;
+      --secondary: #ffffff;
+      --surface: #f8f7ff;
+      --text: #0f0f1a;
+      --text-light: #6b6b8a;
+      --shadow: rgba(79, 70, 229, 0.12);
+      --shadow-lg: rgba(79, 70, 229, 0.22);
+      --gradient: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+      --gradient-shine: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #3730a3 100%);
+      --border: rgba(79, 70, 229, 0.12);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      /* Dark mode — 2 colors: deep midnight + cyan-electric */
+      --primary: #22d3ee;
+      --primary-deep: #06b6d4;
+      --secondary: #060b17;
+      --surface: #0d1425;
+      --text: #f0f4ff;
+      --text-light: #8b9bbf;
+      --shadow: rgba(34, 211, 238, 0.15);
+      --shadow-lg: rgba(34, 211, 238, 0.28);
+      --gradient: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+      --gradient-shine: linear-gradient(135deg, #67e8f9 0%, #22d3ee 50%, #06b6d4 100%);
+      --border: rgba(34, 211, 238, 0.15);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: var(--secondary);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: var(--transition);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HEADER & NAVIGATION
+    ═══════════════════════════════════════════════════════════ */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(22px) saturate(180%);
+      -webkit-backdrop-filter: blur(22px) saturate(180%);
+      border-bottom: 1.5px solid var(--border);
+      box-shadow: 0 4px 32px var(--shadow);
+      transition: var(--transition);
+    }
+
+    [data-theme="dark"] header {
+      background: rgba(6,11,23,0.78);
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    nav {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.75rem;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: -0.02em;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .logo i {
+      font-size: 2rem;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-menu a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-menu a:hover {
+      color: var(--primary);
+    }
+
+    .nav-menu a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: var(--transition);
+    }
+
+    .nav-menu a:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .icon-btn:hover {
+      background: var(--primary);
+      color: var(--secondary);
+      transform: scale(1.1);
+    }
+
+    .btn-primary {
+      background: var(--gradient-shine);
+      color: white;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 6px 24px var(--shadow-lg);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 36px var(--shadow-lg);
+      filter: brightness(1.08);
+    }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO SECTION
+    ═══════════════════════════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 6rem 2rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 1000px;
+      height: 1000px;
+      background: var(--gradient);
+      opacity: 0.05;
+      border-radius: 50%;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-50px) rotate(180deg); }
+    }
+
+    .hero-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      background: var(--gradient-shine);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-text .tagline {
+      font-size: 1.3rem;
+      color: var(--primary);
+      font-weight: 500;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      opacity: 0.88;
+    }
+
+    .hero-text p {
+      font-size: 1.25rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      padding: 0.75rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 3rem;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-item .number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .stat-item .label {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .hero-image {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-character-wrapper {
+      position: relative;
+      animation: floatHero 6s ease-in-out infinite;
+    }
+
+    @keyframes floatHero {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    .hero-mascot-frame {
+      position: relative;
+      width: 420px;
+      max-width: 100%;
+    }
+
+    .hero-mascot-img {
+      width: 100%;
+      max-width: 420px;
+      display: block;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 30px 60px var(--shadow-lg));
+      border-radius: 0 0 30px 30px;
+    }
+
+    .mascot-glow {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      height: 60px;
+      background: var(--gradient);
+      opacity: 0.18;
+      border-radius: 50%;
+      filter: blur(28px);
+      z-index: 1;
+    }
+
+    .mascot-badge {
+      position: absolute;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid var(--border);
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.42rem 0.9rem;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 16px var(--shadow);
+      z-index: 5;
+      white-space: nowrap;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    [data-theme="dark"] .mascot-badge {
+      background: rgba(13,20,37,0.88);
+      color: var(--primary);
+    }
+
+    .mascot-badge-1 {
+      top: 12%;
+      right: -18px;
+      animation: badgePop 4s ease-in-out infinite;
+    }
+
+    .mascot-badge-2 {
+      top: 40%;
+      left: -22px;
+      animation: badgePop 4s ease-in-out infinite 1.4s;
+    }
+
+    .mascot-badge-3 {
+      bottom: 14%;
+      right: -10px;
+      animation: badgePop 4s ease-in-out infinite 2.8s;
+    }
+
+    @keyframes badgePop {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.04); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FEATURES SECTION
+    ═══════════════════════════════════════════════════════════ */
+    .section {
+      padding: 6rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: -0.025em;
+      margin-bottom: 1rem;
+      background: var(--gradient-shine);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-header p {
+      font-size: 1.25rem;
+      color: var(--text-light);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      padding: 2.5rem;
+      border-radius: 24px;
+      box-shadow: 0 4px 24px var(--shadow);
+      transition: var(--transition);
+      border: 1.5px solid var(--border);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 16px 48px var(--shadow-lg);
+      border-color: var(--primary);
+      background: var(--secondary);
+    }
+
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--gradient);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: white;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .feature-card p {
+      color: var(--text-light);
+      line-height: 1.8;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HOW IT WORKS
+    ═══════════════════════════════════════════════════════════ */
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+      position: relative;
+    }
+
+    .step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step-number {
+      width: 80px;
+      height: 80px;
+      background: var(--gradient-shine);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 8px 32px var(--shadow-lg);
+      position: relative;
+    }
+
+    .step-number::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      opacity: 0.3;
+    }
+
+    .step h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .step p {
+      color: var(--text-light);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       CTA SECTION
+    ═══════════════════════════════════════════════════════════ */
+    .cta-section {
+      background: var(--gradient);
+      color: white;
+      padding: 6rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .cta-section h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .cta-section p {
+      font-size: 1.25rem;
+      margin-bottom: 2.5rem;
+      opacity: 0.9;
+      position: relative;
+    }
+
+    .cta-section .btn-primary {
+      background: white;
+      color: var(--primary);
+      font-size: 1.125rem;
+      padding: 1rem 3rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════════════ */
+    footer {
+      background: var(--secondary);
+      padding: 3rem 2rem 1.5rem;
+      border-top: 1px solid var(--shadow);
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .footer-brand .logo {
+      font-size: 1.5rem;
+    }
+
+    .footer-brand p {
+      color: var(--text-light);
+      line-height: 1.8;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .social-icon:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px var(--shadow);
+    }
+
+    .footer-links h4 {
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      display: block;
+      padding: 0.5rem 0;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+      padding-left: 5px;
+    }
+
+    .footer-bottom {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid var(--shadow);
+      text-align: center;
+      color: var(--text-light);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════════════════ */
+    @media (max-width: 968px) {
+      .nav-menu {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        width: 100%;
+        background: var(--secondary);
+        flex-direction: column;
+        padding: 2rem;
+        box-shadow: 0 10px 30px var(--shadow);
+        transition: var(--transition);
+      }
+
+      .nav-menu.active {
+        left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-text h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-image {
+        order: -1;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .footer-social {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-text h1 {
+        font-size: 2rem;
+      }
+
+      .hero-text .tagline {
+        font-size: 1.125rem;
+      }
+
+      .section-header h2 {
+        font-size: 2rem;
+      }
+
+      .cta-section h2 {
+        font-size: 2rem;
+      }
+
+      .hero-stats {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       UTILITIES
+    ═══════════════════════════════════════════════════════════ */
+    .emoji {
+      font-style: normal;
+    }
+
+    /* Smooth scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+  <!-- ═══════════════════════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════════════════════ -->
+  <header>
+    <nav>
+      <a href="#" class="logo">
+        <i class="fas fa-chart-line"></i>
+        <span>BuyShare</span>
+      </a>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#features" data-en="Features" data-rw="Ibiranga">Features</a></li>
+        <li><a href="#how-it-works" data-en="How It Works" data-rw="Imikorere">How It Works</a></li>
+        <li><a href="#pricing" data-en="Pricing" data-rw="Ibiciro">Pricing</a></li>
+        <li><a href="#contact" data-en="Contact" data-rw="Twandikire">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="langToggle" title="Change Language">
+          <i class="fas fa-globe"></i>
+        </button>
+        <button class="icon-btn" id="themeToggle" title="Toggle Theme">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="btn-primary" onclick="window.location.href='http://localhost:2500/'" data-en="Get Started" data-rw="Tangira">
+          Get Started
+        </button>
+        <button class="mobile-toggle" id="mobileToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 data-en="Invest Smart, Grow Wealthy" data-rw="Shyira mu Migabane, Kunga Ubutunzi">
+          Invest Smart,<br>Grow Wealthy
+        </h1>
+        <p class="tagline" data-en="Bank shares that work for you" data-rw="Imigabane y'amabanki ikugirira akazi">
+          <span class="emoji">💰</span> Bank shares that work for you
+        </p>
+        <p data-en="Rwanda's premier platform for investing in bank shares. Start building your financial future with trusted banks, transparent returns, and expert guidance." 
+           data-rw="Urubuga rwa mbere mu Rwanda rwo gushyira imari mu migabane y'amabanki. Tangira kubaka ejo hazaza h'imari yawe hamwe n'amabanki yizewe, inyungu zisobanutse, n'ubuyobozi bw'inzobere.">
+          Rwanda's premier platform for investing in bank shares. Start building your financial future with trusted banks, transparent returns, and expert guidance.
+        </p>
+
+        <div class="hero-buttons">
+          <button class="btn-primary" onclick="window.location.href='http://localhost:2500/'" data-en="Start Investing Today" data-rw="Tangira Gushyira Imari Uyu Munsi">
+            <span class="emoji">🚀</span> Start Investing Today
+          </button>
+          <button class="btn-secondary" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})" data-en="Learn More" data-rw="Menya Byinshi">
+            Learn More <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="number">5+</div>
+            <div class="label" data-en="Partner Banks" data-rw="Amabanki Dufitaniye">Partner Banks</div>
+          </div>
+          <div class="stat-item">
+            <div class="number">1000+</div>
+            <div class="label" data-en="Active Investors" data-rw="Abashyira Imari">Active Investors</div>
+          </div>
+          <div class="stat-item">
+            <div class="number">15%</div>
+            <div class="label" data-en="Avg. Returns" data-rw="Inyungu Zijyanye">Avg. Returns</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <div class="hero-character-wrapper">
+          <div class="hero-mascot-frame">
+            <img src="data:image/webp;base64,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" alt="Velamini mascot" class="hero-mascot-img"/>
+            <div class="mascot-glow"></div>
+            <div class="mascot-badge mascot-badge-1"><i class="fas fa-chart-line"></i> +15% ROI</div>
+            <div class="mascot-badge mascot-badge-2"><i class="fas fa-shield-alt"></i> Secured</div>
+            <div class="mascot-badge mascot-badge-3"><i class="fas fa-bolt"></i> Live</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FEATURES SECTION
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="section" id="features">
+    <div class="section-header">
+      <h2 data-en="Why Choose BuyShare?" data-rw="Kuki Uhitamo BuyShare?">
+        Why Choose BuyShare?
+      </h2>
+      <p data-en="Everything you need to grow your wealth through bank share investments" 
+         data-rw="Ibikenewe byose kugira ngo ukunze ubutunzi bwawe binyuze mu gushyira imari mu migabane y'amabanki">
+        Everything you need to grow your wealth through bank share investments
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3 data-en="Secure & Trusted" data-rw="Umutekano & Kwizerana">
+          <span class="emoji">🔒</span> Secure & Trusted
+        </h3>
+        <p data-en="Bank-grade security protecting your investments 24/7" 
+           data-rw="Umutekano urenze wo mu mabanki urinda ishoramari ryawe igihe cyose">
+          Bank-grade security protecting your investments 24/7
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <h3 data-en="Real-Time Tracking" data-rw="Gukurikirana mu Gihe Nyacyo">
+          <span class="emoji">📈</span> Real-Time Tracking
+        </h3>
+        <p data-en="Monitor your portfolio growth and profits instantly" 
+           data-rw="Kurikirana imikurire y'imigabane yawe n'inyungu ako kanya">
+          Monitor your portfolio growth and profits instantly
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-university"></i>
+        </div>
+        <h3 data-en="Top Banks" data-rw="Amabanki Akomeye">
+          <span class="emoji">🏦</span> Top Banks
+        </h3>
+        <p data-en="Access shares from Rwanda's leading financial institutions" 
+           data-rw="Kubona imigabane yo mu mabanki akomeye mu Rwanda">
+          Access shares from Rwanda's leading financial institutions
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h3 data-en="Easy to Use" data-rw="Byoroshye Gukoresha">
+          <span class="emoji">📱</span> Easy to Use
+        </h3>
+        <p data-en="Intuitive platform - invest in minutes, not hours" 
+           data-rw="Urubuga rworoshye - shyira imari mu minota, ntabwo ari amasaha">
+          Intuitive platform - invest in minutes, not hours
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-percent"></i>
+        </div>
+        <h3 data-en="Transparent Returns" data-rw="Inyungu Zisobanutse">
+          <span class="emoji">💹</span> Transparent Returns
+        </h3>
+        <p data-en="Clear profit projections and maturity periods upfront" 
+           data-rw="Inyungu yateguwe mbere hamwe n'igihe cyo kurangiza">
+          Clear profit projections and maturity periods upfront
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-headset"></i>
+        </div>
+        <h3 data-en="Expert Support" data-rw="Ubufasha bw'Inzobere">
+          <span class="emoji">👨‍💼</span> Expert Support
+        </h3>
+        <p data-en="Dedicated team ready to guide your investment journey" 
+           data-rw="Itsinda ryahawe inshingano ryo kugufasha mu gushyira imari">
+          Dedicated team ready to guide your investment journey
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HOW IT WORKS
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="section" id="how-it-works" style="background: var(--secondary);">
+    <div class="section-header">
+      <h2 data-en="How It Works" data-rw="Imikorere">
+        How It Works
+      </h2>
+      <p data-en="Get started in 4 simple steps" data-rw="Tangira mu ntambwe 4 zoroshye">
+        Get started in 4 simple steps
+      </p>
+    </div>
+
+    <div class="steps-container">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3 data-en="Create Account" data-rw="Fungura Konti">
+          <span class="emoji">✍️</span> Create Account
+        </h3>
+        <p data-en="Sign up in under 2 minutes with your email" 
+           data-rw="Iyandikishe mu minota iri munsi ya 2 ukoresheje imeyili yawe">
+          Sign up in under 2 minutes with your email
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3 data-en="Browse Shares" data-rw="Shaka Imigabane">
+          <span class="emoji">🔍</span> Browse Shares
+        </h3>
+        <p data-en="Explore available shares with clear profit info" 
+           data-rw="Shakisha imigabane iboneka hamwe n'amakuru y'inyungu asobanutse">
+          Explore available shares with clear profit info
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3 data-en="Invest" data-rw="Shyira Imari">
+          <span class="emoji">💰</span> Invest
+        </h3>
+        <p data-en="Select shares and submit your purchase request" 
+           data-rw="Hitamo imigabane hanyuma ohereze isaba ryo kugura">
+          Select shares and submit your purchase request
+        </p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3 data-en="Track Growth" data-rw="Kurikirana Imikurire">
+          <span class="emoji">📊</span> Track Growth
+        </h3>
+        <p data-en="Watch your portfolio grow in real-time" 
+           data-rw="Reba imigabane yawe ikura mu gihe nyacyo">
+          Watch your portfolio grow in real-time
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CTA SECTION
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="cta-section">
+    <h2 data-en="Ready to Start Investing?" data-rw="Uriteguye Gutangira Gushyira Imari?">
+      Ready to Start Investing?
+    </h2>
+    <p data-en="Join thousands of investors building wealth through bank shares" 
+       data-rw="Jya mu bihumbi by'abashyira imari bubaka ubutunzi binyuze mu migabane y'amabanki">
+      Join thousands of investors building wealth through bank shares
+    </p>
+    <button class="btn-primary" onclick="window.location.href='http://localhost:2500/'">
+      <span class="emoji">🚀</span>
+      <span data-en="Get Started Now - It's Free!" data-rw="Tangira Ubu - Ntihemba!">
+        Get Started Now - It's Free!
+      </span>
+    </button>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════ -->
+  <footer id="contact">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <i class="fas fa-chart-line"></i>
+          <span>BuyShare</span>
+        </a>
+        <p data-en="Rwanda's trusted platform for bank share investments. Build your wealth with transparency and security." 
+           data-rw="Urubuga rwizewe mu Rwanda rwo gushyira imari mu migabane y'amabanki. Bubaka ubutunzi bwawe hamwe no gusobanura neza n'umutekano.">
+          Rwanda's trusted platform for bank share investments. Build your wealth with transparency and security.
+        </p>
+        <div class="footer-social">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h4 data-en="Company" data-rw="Isosiyete">Company</h4>
+        <ul>
+          <li><a href="#" data-en="About Us" data-rw="Ibyerekeye">About Us</a></li>
+          <li><a href="#" data-en="Our Team" data-rw="Itsinda Ryacu">Our Team</a></li>
+          <li><a href="#" data-en="Careers" data-rw="Akazi">Careers</a></li>
+          <li><a href="#" data-en="Press" data-rw="Itangazamakuru">Press</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4 data-en="Resources" data-rw="Ibyifashishwa">Resources</h4>
+        <ul>
+          <li><a href="#" data-en="Help Center" data-rw="Ubufasha">Help Center</a></li>
+          <li><a href="#" data-en="Investment Guide" data-rw="Umuyobozi w'Ishoramari">Investment Guide</a></li>
+          <li><a href="#" data-en="FAQs" data-rw="Ibibazo Bikunze Kubazwa">FAQs</a></li>
+          <li><a href="#" data-en="Blog" data-rw="Blog">Blog</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4 data-en="Contact" data-rw="Twandikire">Contact</h4>
+        <ul>
+          <li><a href="mailto:info@buyshare.rw"><i class="fas fa-envelope"></i> info@buyshare.rw</a></li>
+          <li><a href="tel:+250788000000"><i class="fas fa-phone"></i> +250 788 000 000</a></li>
+          <li><a href="#"><i class="fas fa-map-marker-alt"></i> Kigali, Rwanda</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2024 BuyShare. <span data-en="All rights reserved." data-rw="Uburenganzira bwose burabitswe.">All rights reserved.</span></p>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════════════════════════ -->
+  <script>
+    // ═══════════════════════════════════════════════════════════
+    // THEME TOGGLE
+    // ═══════════════════════════════════════════════════════════
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+    
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+    
+    function updateThemeIcon(theme) {
+      themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // LANGUAGE TOGGLE
+    // ═══════════════════════════════════════════════════════════
+    const langToggle = document.getElementById('langToggle');
+    let currentLang = localStorage.getItem('language') || 'en';
+    
+    // Apply saved language
+    updateLanguage(currentLang);
+    
+    langToggle.addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'rw' : 'en';
+      localStorage.setItem('language', currentLang);
+      updateLanguage(currentLang);
+    });
+    
+    function updateLanguage(lang) {
+      const elements = document.querySelectorAll('[data-en][data-rw]');
+      elements.forEach(el => {
+        const text = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-rw');
+        if (el.tagName === 'INPUT' || el.tagName === 'BUTTON') {
+          if (el.getAttribute('placeholder')) {
+            el.setAttribute('placeholder', text);
+          } else {
+            el.innerHTML = text;
+          }
+        } else {
+          el.textContent = text;
+        }
+      });
+      
+      // Update language icon/text
+      langToggle.innerHTML = `<i class="fas fa-globe"></i>`;
+      langToggle.setAttribute('title', lang === 'en' ? 'Kinyarwanda' : 'English');
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // MOBILE MENU TOGGLE
+    // ═══════════════════════════════════════════════════════════
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navMenu = document.getElementById('navMenu');
+    
+    mobileToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      const icon = mobileToggle.querySelector('i');
+      icon.className = navMenu.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+    });
+    
+    // Close menu when clicking on a link
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        mobileToggle.querySelector('i').className = 'fas fa-bars';
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // SMOOTH SCROLL FOR ANCHOR LINKS
+    // ═══════════════════════════════════════════════════════════
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href !== '#') {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // SCROLL ANIMATIONS
+    // ═══════════════════════════════════════════════════════════
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe feature cards and steps
+    document.querySelectorAll('.feature-card, .step').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // HEADER SCROLL EFFECT
+    // ═══════════════════════════════════════════════════════════
+    let lastScroll = 0;
+    const header = document.querySelector('header');
+    
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll > 100) {
+        header.style.boxShadow = '0 4px 30px var(--shadow)';
+        header.style.padding = '0.5rem 0';
+      } else {
+        header.style.boxShadow = '0 2px 20px var(--shadow)';
+        header.style.padding = '1rem 0';
+      }
+      
+      lastScroll = currentScroll;
+    });
+  </script>
+</body>
+</html>
