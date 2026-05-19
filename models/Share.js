@@ -87,6 +87,14 @@ class Share {
     );
   }
 
+  /** Unarchive – restore archived share to inactive for review */
+  static async unarchive(id) {
+    await db.query(
+      `UPDATE shares SET status='inactive', archived_at=NULL WHERE id=? AND status='archived'`,
+      [id]
+    );
+  }
+
   /** Permanent delete – only allowed on archived shares with no purchase requests */
   static async remove(id) {
     await db.query('DELETE FROM shares WHERE id=? AND status="archived"', [id]);

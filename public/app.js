@@ -98,12 +98,20 @@ const T = {
     profit_rate:'Monthly Profit %', profit_cycle:'Profit Cycle',
     cycle_monthly:'Monthly', cycle_quarterly:'Quarterly', cycle_yearly:'Yearly',
     profit_per_share:'Profit/Share/Cycle', earning_label:'Your Est. Earnings',
-    archive_share:'Archive Share', unarchive_share:'Unarchive',
+    archive_share:'Archive Share', unarchive_share:'Restore Share',
     show_archived:'Show Archived', hide_archived:'Hide Archived',
     msg_share_archived:'Share archived.',
+    msg_share_unarchived:'Share restored to inactive.',
     msg_share_perm_del:'Share permanently deleted.',
     confirm_archive:'Archive this share? It will be hidden from investors.',
     confirm_perm_del:'Permanently delete this archived share? This CANNOT be undone.',
+    activate_share:'Activate Share',
+    deactivate_share:'Deactivate Share',
+    msg_share_activated:'✅ Share activated!',
+    msg_share_deactivated:'Share deactivated.',
+    deactivate_share_reason_lbl:'Reason for Deactivating Share',
+    deactivate_share_reason_ph:'Enter reason for deactivation…',
+    my_available_lbl:'Available to Sell',
   },
   kin: {
     delete_read:'Siba ibyanditswe',
@@ -191,9 +199,17 @@ const T = {
     archive_share:'Bika Imigabane', unarchive_share:'Subiza',
     show_archived:'Erekana Byabitswe', hide_archived:'Hisha Byabitswe',
     msg_share_archived:'Imigabane yabitswe.',
+    msg_share_unarchived:'Imigabane yasubijwe ku ntakora.',
     msg_share_perm_del:'Imigabane yasibwe burundu.',
     confirm_archive:'Bika iyi migabane? Abaturamteri ntibazayibona.',
     confirm_perm_del:'Siba burundu iyi migabane yabitswe? NTIBIZASUBUKA.',
+    activate_share:'Fungura Imigabane',
+    deactivate_share:'Hagarika Imigabane',
+    msg_share_activated:'✅ Imigabane ifunguwe!',
+    msg_share_deactivated:'Imigabane ihagaritswe.',
+    deactivate_share_reason_lbl:'Impamvu yo Guhagarika Imigabane',
+    deactivate_share_reason_ph:'Injiza impamvu…',
+    my_available_lbl:'Iboneka kugurwa',
   }
 };
 
@@ -209,6 +225,7 @@ const S = {
   editUserId:  null,
   confirmCb:   null,
   notifTimer:  null,
+  sharesTimer: null,
   currentBuyShare: null,
   showArchived: false,
 };
@@ -319,6 +336,7 @@ function showApp() {
   loadNotifs();
   goPage('dashboard');
   startNotifTimer();
+  startSharesTimer();
 }
 
 async function doLogin(e) {
@@ -385,6 +403,7 @@ async function doLogout() {
   await api('POST', '/api/auth/logout').catch(() => {});
   S.user = null; S.page = 'dashboard'; S.shares = []; S.banks = [];
   stopNotifTimer();
+  stopSharesTimer();
   showAuth();
 }
 
@@ -491,7 +510,7 @@ async function loadDash() {
       {ic:'fa-money-bill-wave',cl:'ic-gn',v:fmt(stats.total_volume||0)+' RWF',l:'total_volume'},
     ],
     bank_manager: [
-      {ic:'fa-layer-group',cl:'ic-bl',v:stats.my_shares,l:'my_shares_listed'},
+      {ic:'fa-layer-group',cl:'ic-bl',v:stats.my_shares,l:'my_shares_listed',sub:(stats.my_available != null ? stats.my_available+' '+t('my_available_lbl') : null)},
       {ic:'fa-clock',cl:'ic-or',v:stats.pending,l:'pending'},
       {ic:'fa-check-circle',cl:'ic-gn',v:stats.approved,l:'approved'},
       {ic:'fa-money-bill-wave',cl:'ic-pu',v:fmt(stats.revenue||0)+' RWF',l:'bank_revenue'},
@@ -508,8 +527,9 @@ async function loadDash() {
   (CARDS[role]||[]).forEach(c => {
     const div = document.createElement('div');
     div.className = 'stat glass';
+    const subHtml = c.sub ? '<div class="stat-sub" style="font-size:.72rem;color:var(--ok);margin-top:2px"><i class="fas fa-circle-dot" style="margin-right:3px"></i>'+c.sub+'</div>' : '';
     div.innerHTML = '<div class="stat-ic '+c.cl+'"><i class="fas '+c.ic+'"></i></div>'+
-      '<div><div class="stat-v">'+(c.v != null ? c.v : '–')+'</div><div class="stat-l">'+t(c.l)+'</div></div>';
+      '<div><div class="stat-v">'+(c.v != null ? c.v : '–')+'</div><div class="stat-l">'+t(c.l)+'</div>'+subHtml+'</div>';
     grid.appendChild(div);
   });
 
@@ -595,6 +615,17 @@ function toggleArchived() {
   loadShares();
 }
 
+// ── Shares auto-refresh (30s) for investors to see live data ───
+function startSharesTimer() {
+  stopSharesTimer();
+  if (S.user && S.user.role === 'investor') {
+    S.sharesTimer = setInterval(() => { if (S.page === 'shares') loadShares(); }, 30000);
+  }
+}
+function stopSharesTimer() {
+  if (S.sharesTimer) { clearInterval(S.sharesTimer); S.sharesTimer = null; }
+}
+
 function buildShareCard(s) {
   const pct    = s.total_shares > 0 ? Math.min(100, Math.round(s.available_shares/s.total_shares*100)) : 0;
   const isInv  = S.user.role === 'investor';
@@ -623,8 +654,9 @@ function buildShareCard(s) {
 
   let acts = '';
   if (isArc && isAdmin) {
-    // Archived: only permanent delete button
-    acts = '<button class="btn btn-danger btn-sm" data-action="perm-del-share" data-id="'+s.id+'"><i class="fas fa-trash"></i> Delete Forever</button>';
+    // Archived: Restore (unarchive) + permanent delete
+    acts = '<button class="btn btn-success btn-sm" data-action="unarchive-share" data-id="'+s.id+'"><i class="fas fa-upload"></i> '+t('unarchive_share')+'</button> '+
+           '<button class="btn btn-danger btn-sm" data-action="perm-del-share" data-id="'+s.id+'"><i class="fas fa-trash"></i> Delete Forever</button>';
   } else if (isInv) {
     // Investor: buy if active & available
     acts = s.status==='active' && s.available_shares>0
@@ -634,8 +666,8 @@ function buildShareCard(s) {
     // Admin: Deactivate/Activate toggle + Archive button (NO edit, NO add)
     const isOff = s.status === 'inactive' || s.status === 'suspended';
     const togBtn = isOff
-      ? '<button class="btn btn-success btn-sm" data-action="activate-share" data-id="'+s.id+'"><i class="fas fa-toggle-on"></i> '+t('activate_user')+'</button>'
-      : '<button class="btn btn-secondary btn-sm" data-action="deactivate-share" data-id="'+s.id+'"><i class="fas fa-toggle-off"></i> '+t('deactivate_user')+'</button>';
+      ? '<button class="btn btn-success btn-sm" data-action="activate-share" data-id="'+s.id+'"><i class="fas fa-toggle-on"></i> '+t('activate_share')+'</button>'
+      : '<button class="btn btn-secondary btn-sm" data-action="deactivate-share" data-id="'+s.id+'"><i class="fas fa-toggle-off"></i> '+t('deactivate_share')+'</button>';
     acts = togBtn + ' <button class="btn btn-warning btn-sm" data-action="archive-share" data-id="'+s.id+'" title="'+t('archive_share')+'"><i class="fas fa-archive"></i></button>';
   } else {
     // Manager: Edit + Delete
@@ -669,7 +701,8 @@ function attachDelegates() {
     else if (action==='archive-share')  archiveShare(id);
     else if (action==='perm-del-share') permDelShare(id);
     else if (action==='activate-share')   toggleShareStatus(id, 'active');
-    else if (action==='deactivate-share') toggleShareStatus(id, 'inactive');
+    else if (action==='deactivate-share') openDeactShare(id);
+    else if (action==='unarchive-share')  unarchiveShare(id);
     else if (action==='del-share-mgr')    delShareManager(id);
     // Mu mwanya wa attachDelegates(), ongeraho iyi portion:
 
@@ -918,7 +951,7 @@ function permDelShare(id) {
 async function toggleShareStatus(id, newStatus) {
   const share = S.shares.find(x => String(x.id)===String(id));
   if (!share) return;
-  const label = newStatus==='active' ? t('activate_user') : t('deactivate_user');
+  const label = newStatus==='active' ? t('activate_share') : t('deactivate_share');
   $('#conf-msg').textContent = label + ' "' + share.share_name + '"?';
   S.confirmCb = async () => {
     try {
@@ -934,9 +967,69 @@ async function toggleShareStatus(id, newStatus) {
         profit_cycle: share.profit_cycle || 'monthly',
       });
       closeMod('conf-ov');
-      toast(newStatus==='active' ? t('msg_user_activated') : t('msg_user_deactivated'), newStatus==='active'?'ok':'in');
+      toast(newStatus==='active' ? t('msg_share_activated') : t('msg_share_deactivated'), newStatus==='active'?'ok':'in');
       loadShares();
     } catch(ex) { toast(ex.message,'er'); }
+  };
+  openMod('conf-ov');
+}
+
+// Admin: open deactivation reason modal for a share
+function openDeactShare(id) {
+  const share = S.shares.find(x => String(x.id)===String(id));
+  if (!share) return;
+  $('#ds-uid').value = id;
+  $('#ds-reason').value = '';
+  const errEl = $('#ds-err');
+  if (errEl) errEl.classList.add('hidden');
+  openMod('deact-share-ov');
+  setTimeout(() => $('#ds-reason').focus(), 120);
+}
+
+async function doDeactivateShare(e) {
+  e.preventDefault();
+  const id     = $('#ds-uid').value;
+  const reason = ($('#ds-reason').value || '').trim();
+  const errEl  = $('#ds-err');
+  if (!reason) {
+    if (errEl) { errEl.textContent = t('err_required'); errEl.classList.remove('hidden'); }
+    return;
+  }
+  const share = S.shares.find(x => String(x.id)===String(id));
+  if (!share) return;
+  try {
+    await api('PUT', '/api/shares/'+id, {
+      share_name: share.share_name,
+      total_shares: share.total_shares,
+      available_shares: share.available_shares,
+      price_per_share: share.price_per_share,
+      currency: share.currency,
+      status: 'inactive',
+      description: share.description || '',
+      profit_rate: share.profit_rate || 0,
+      profit_cycle: share.profit_cycle || 'monthly',
+      deactivation_reason: reason,
+    });
+    closeMod('deact-share-ov');
+    toast(t('msg_share_deactivated'), 'in');
+    loadShares();
+  } catch(ex) {
+    if (errEl) { errEl.textContent = ex.message; errEl.classList.remove('hidden'); }
+  }
+}
+
+// Admin: unarchive (restore) an archived share to inactive
+function unarchiveShare(id) {
+  const share = S.shares.find(x => String(x.id)===String(id));
+  const name = share ? share.share_name : 'this share';
+  $('#conf-msg').textContent = t('unarchive_share') + ' "' + name + '"?';
+  S.confirmCb = async () => {
+    try {
+      await api('PATCH', '/api/shares/'+id+'/unarchive');
+      closeMod('conf-ov');
+      toast(t('msg_share_unarchived'), 'ok');
+      loadShares();
+    } catch(ex) { toast(ex.message, 'er'); }
   };
   openMod('conf-ov');
 }
@@ -1235,6 +1328,8 @@ $('#delete-read').addEventListener('click', async () => {
 
   // Shares
   $('#add-share-btn').addEventListener('click', openAddShare);
+  const toggleArchBtn = $('#toggle-archived-btn');
+  if (toggleArchBtn) toggleArchBtn.addEventListener('click', toggleArchived);
   $('#share-form').addEventListener('submit', doShareSave);
 
   // ── BUY FORM ─────────────────────────────────────────────────
@@ -1247,6 +1342,8 @@ $('#delete-read').addEventListener('click', async () => {
   $('#user-form').addEventListener('submit', doUserSave);
   const deactForm = $('#deact-form');
   if (deactForm) deactForm.addEventListener('submit', doDeactivate);
+  const deactShareForm = $('#deact-share-form');
+  if (deactShareForm) deactShareForm.addEventListener('submit', doDeactivateShare);
   $('#rej-form').addEventListener('submit', doReject);
   $('#req-filter').addEventListener('change', e => loadMngReqs(e.target.value));
   $('#conf-yes').addEventListener('click', () => { if (S.confirmCb) { const cb=S.confirmCb; S.confirmCb=null; cb(); } });

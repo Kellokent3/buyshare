@@ -106,7 +106,7 @@
 <!-- ══ APP LAYOUT ══ -->
 <div id="app" class="app hidden">
   <!-- Sidebar -->
-  <aside id="sidebar" class="sidebar glass">
+  <aside id="sidebar" class="sidebar glass" >
     <div class="sb-hd">
       <div class="logo"><i class="fas fa-university"></i><span>BuyShare</span></div>
     </div>
@@ -127,7 +127,7 @@
   <div id="sb-overlay" class="sb-overlay"></div>
 
   <!-- Main -->
-  <main id="main" class="main">
+  <main id="main" class="main"  >
     <header class="topbar glass">
       <div class="tb-l">
         <button class="btn-ico" id="menu-btn"><i class="fas fa-bars"></i></button>
@@ -231,7 +231,7 @@
             <thead><tr>
               <th data-t="investor">Investor</th><th data-t="share">Share</th>
               <th data-t="qty">Qty</th><th data-t="total">Total</th>
-              <th data-t="status">Status</th><th data-t="date">Date</th>
+              <th data-t="date">Date</th>
               <th data-t="actions">Actions</th>
             </tr></thead>
             <tbody id="mng-req-body"></tbody>
@@ -412,8 +412,33 @@
     <p id="conf-msg" style="margin:16px 0;color:var(--txt2)" data-t="confirm_delete">Are you sure?</p>
     <div class="mod-ft">
       <button class="btn btn-secondary" data-m="conf-ov" data-t="cancel">Cancel</button>
-      <button class="btn btn-danger" id="conf-yes"><i class="fas fa-trash"></i><span data-t="delete">Delete</span></button>
+      <button class="btn btn-danger" id="conf-yes"><i class="fas fa-trash"></i><span data-t="confirm"></span></button>
     </div>
+  </div>
+</div>
+
+<!-- DEACTIVATE SHARE WITH REASON -->
+<div class="modal-ov hidden" id="deact-share-ov">
+  <div class="modal glass" style="max-width:460px">
+    <div class="mod-hd">
+      <h3><i class="fas fa-toggle-off"></i> <span data-t="deactivate_share">Deactivate Share</span></h3>
+      <button class="mod-close" data-m="deact-share-ov">×</button>
+    </div>
+    <form id="deact-share-form">
+      <input type="hidden" id="ds-uid">
+      <div class="fg">
+        <label class="fl" data-t="deactivate_share_reason_lbl">Reason for Deactivating Share</label>
+        <textarea id="ds-reason" rows="3" style="width:100%;resize:vertical"
+          data-tp="deactivate_share_reason_ph" placeholder="Enter reason for deactivation…"></textarea>
+      </div>
+      <p id="ds-err" class="err hidden"></p>
+      <div class="mod-ft">
+        <button type="button" class="btn btn-secondary" data-m="deact-share-ov" data-t="cancel">Cancel</button>
+        <button type="submit" class="btn btn-danger">
+          <i class="fas fa-toggle-off"></i> <span data-t="deactivate_share">Deactivate</span>
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 

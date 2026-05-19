@@ -87,7 +87,8 @@ router.put('/:id', requireAuth, requireRole('bank_manager', 'admin'), async (req
     const u = req.session.user;
     const {
       share_name, total_shares, available_shares, price_per_share,
-      currency, status, description, profit_rate, profit_cycle
+      currency, status, description, profit_rate, profit_cycle,
+      deactivation_reason,
     } = req.body;
 
     // Managers cannot set archived status – only admin can
@@ -95,12 +96,54 @@ router.put('/:id', requireAuth, requireRole('bank_manager', 'admin'), async (req
       return res.status(403).json({ error: 'Only admins can archive shares' });
     }
 
+    // Fetch share BEFORE update to detect status change
+    const shareBefore = await Share.findById(req.params.id);
+
     await Share.update(req.params.id, {
       share_name, total_shares, available_shares, price_per_share,
       currency, status, description,
       profit_rate: Number(profit_rate) || 0,
       profit_cycle: profit_cycle || 'monthly',
     });
+
+    // ── Notify on deactivation (inactive / suspended) with reason ──
+    const isDeactivation = (status === 'inactive' || status === 'suspended')
+      && shareBefore && shareBefore.status === 'active';
+
+    if (isDeactivation) {
+      const reason = (deactivation_reason || '').trim();
+      const reasonNote = reason ? ` Reason: ${reason}` : '';
+      const shareData = await Share.findById(req.params.id);
+      const sName = (shareData || {}).share_name || share_name;
+      const bName = (shareData || {}).bank_name  || '';
+
+      // Find all investors with approved or pending requests on this share
+      const [affectedInvestors] = await db.query(
+        `SELECT DISTINCT investor_id FROM purchase_requests
+         WHERE share_id=? AND status IN ('approved','pending')`,
+        [req.params.id]
+      );
+      for (const row of affectedInvestors) {
+        Notification.create(
+          row.investor_id,
+          '⚠️ Share Deactivated',
+          `"${sName}" (${bName}) has been deactivated and is no longer available.${reasonNote}`,
+          'warning'
+        ).catch(() => {});
+      }
+
+      // Notify the bank manager(s) who manage this share's bank
+      if (shareBefore) {
+        Notification.broadcast({
+          role: 'bank_manager',
+          bank_id: shareBefore.bank_id,
+          excludeId: u.role === 'bank_manager' ? u.id : null,
+          title: '⚠️ Share Deactivated',
+          message: `Admin deactivated "${sName}".${reasonNote}`,
+          type: 'warning',
+        }).catch(() => {});
+      }
+    }
 
     // Notify investors when profit rate changes on an active share
     if (status === 'active' && Number(profit_rate) > 0) {
@@ -125,6 +168,15 @@ router.patch('/:id/archive', requireAuth, requireRole('admin'), async (req, res)
   try {
     await Share.archive(req.params.id);
     AuditLog.log(req.session.user.id, 'ARCHIVE_SHARE', 'shares', req.params.id, {}, req.ip).catch(() => {});
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ── PATCH /api/shares/:id/unarchive – restore archived share (admin only) ─
+router.patch('/:id/unarchive', requireAuth, requireRole('admin'), async (req, res) => {
+  try {
+    await Share.unarchive(req.params.id);
+    AuditLog.log(req.session.user.id, 'UNARCHIVE_SHARE', 'shares', req.params.id, {}, req.ip).catch(() => {});
     res.json({ success: true });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });

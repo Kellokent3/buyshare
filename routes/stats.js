@@ -23,10 +23,11 @@ router.get('/', requireAuth, async (req, res) => {
       };
     } else if (role === 'bank_manager') {
       stats = {
-        my_shares: (await q("SELECT COUNT(*) v FROM shares WHERE bank_id=?", [bank_id])).v,
-        pending:   (await q("SELECT COUNT(*) v FROM purchase_requests pr JOIN shares s ON pr.share_id=s.id WHERE s.bank_id=? AND pr.status='pending'", [bank_id])).v,
-        approved:  (await q("SELECT COUNT(*) v FROM purchase_requests pr JOIN shares s ON pr.share_id=s.id WHERE s.bank_id=? AND pr.status='approved'", [bank_id])).v,
-        revenue:   (await q("SELECT COALESCE(SUM(pr.total_amount),0) v FROM purchase_requests pr JOIN shares s ON pr.share_id=s.id WHERE s.bank_id=? AND pr.status='approved'", [bank_id])).v,
+        my_shares:   (await q("SELECT COUNT(*) v FROM shares WHERE bank_id=? AND status='active'", [bank_id])).v,
+        my_available:(await q("SELECT COUNT(*) v FROM shares WHERE bank_id=? AND status='active' AND available_shares > 0", [bank_id])).v,
+        pending:     (await q("SELECT COUNT(*) v FROM purchase_requests pr JOIN shares s ON pr.share_id=s.id WHERE s.bank_id=? AND pr.status='pending'", [bank_id])).v,
+        approved:    (await q("SELECT COUNT(*) v FROM purchase_requests pr JOIN shares s ON pr.share_id=s.id WHERE s.bank_id=? AND pr.status='approved'", [bank_id])).v,
+        revenue:     (await q("SELECT COALESCE(SUM(pr.total_amount),0) v FROM purchase_requests pr JOIN shares s ON pr.share_id=s.id WHERE s.bank_id=? AND pr.status='approved'", [bank_id])).v,
       };
     } else {
       stats = {
